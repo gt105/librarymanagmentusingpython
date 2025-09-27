@@ -1,0 +1,62 @@
+books = []
+
+def add_book():
+    title = input("Enter book title: ")
+    author = input("Enter author name: ")
+    books.append({"title": title, "author": author, "issued": False})
+    print("Book added successfully!")
+
+def view_books():
+    if not books:
+        print("No books in library!")
+        return
+    print("\nLibrary Books:")
+    for i, book in enumerate(books, 1):
+        status = "Issued" if book['issued'] else "Available"
+        print(f"{i}. {book['title']} by {book['author']} - {status}")
+
+def issue_book():
+    view_books()
+    if books:
+        index = int(input("Enter book number to issue: "))
+        if 1 <= index <= len(books):
+            if books[index-1]['issued']:
+                print("Book already issued!")
+            else:
+                books[index-1]['issued'] = True
+                print(f"Issued: {books[index-1]['title']}")
+        else:
+            print("Invalid number!")
+
+def return_book():
+    view_books()
+    if books:
+        index = int(input("Enter book number to return: "))
+        if 1 <= index <= len(books):
+            if not books[index-1]['issued']:
+                print("Book was not issued!")
+            else:
+                books[index-1]['issued'] = False
+                print(f"Returned: {books[index-1]['title']}")
+        else:
+            print("Invalid number!")
+
+def main():
+    while True:
+        print("\n1. Add Book\n2. View Books\n3. Issue Book\n4. Return Book\n5. Exit")
+        choice = input("Enter choice: ")
+        if choice == "1":
+            add_book()
+        elif choice == "2":
+            view_books()
+        elif choice == "3":
+            issue_book()
+        elif choice == "4":
+            return_book()
+        elif choice == "5":
+            break
+        else:
+            print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()
