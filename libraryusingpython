@@ -1,6 +1,28 @@
+
 from typing import List, Dict
 
 books: List[Dict[str, str or bool]] = []
+=======
+import json
+from typing import List, Dict
+
+BOOKS_FILE = "books.json"
+
+def load_books() -> List[Dict[str, str or bool]]:
+    """Load books from JSON file."""
+    try:
+        with open(BOOKS_FILE, "r") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+def save_books(books: List[Dict[str, str or bool]]) -> None:
+    """Save books to JSON file."""
+    with open(BOOKS_FILE, "w") as f:
+        json.dump(books, f, indent=4)
+
+books: List[Dict[str, str or bool]] = load_books()
+
 
 def add_book() -> None:
     """Add a new book to the library."""
@@ -14,6 +36,10 @@ def add_book() -> None:
         return
 
     books.append({"title": title, "author": author, "issued": False})
+
+=======
+    save_books(books)
+
     print(f"Book '{title}' by {author} added successfully!\n")
 
 def view_books() -> None:
@@ -34,6 +60,7 @@ def issue_book() -> None:
     if not books:
         return
 
+
     try:
         index = int(input("Enter book number to issue: ").strip()) - 1
         if not (0 <= index < len(books)):
@@ -43,11 +70,40 @@ def issue_book() -> None:
         print("Invalid input! Please enter a number.\n")
         return
 
+=======
+
+    try:
+        index = int(input("Enter book number to issue: ").strip()) - 1
+        if not (0 <= index < len(books)):
+            print("Invalid book number!\n")
+            return
+    except ValueError:
+        print("Invalid input! Please enter a number.\n")
+        return
+
+
     if books[index]['issued']:
         print(f"Book '{books[index]['title']}' is already issued!\n")
     else:
         books[index]['issued'] = True
+        save_books(books)
         print(f"Issued: '{books[index]['title']}' by {books[index]['author']}\n")
+
+=======
+
+
+    if books[index]['issued']:
+        print(f"Book '{books[index]['title']}' is already issued!\n")
+    else:
+        books[index]['issued'] = True
+
+        print(f"Issued: '{books[index]['title']}' by {books[index]['author']}\n")
+
+=======
+        save_books(books)
+        print(f"Issued: '{books[index]['title']}' by {books[index]['author']}\n")
+
+
 
 def return_book() -> None:
     """Return a previously issued book."""
@@ -68,7 +124,53 @@ def return_book() -> None:
         print(f"Book '{books[index]['title']}' was not issued!\n")
     else:
         books[index]['issued'] = False
+
         print(f"Returned: '{books[index]['title']}' by {books[index]['author']}\n")
+
+=======
+        save_books(books)
+        print(f"Returned: '{books[index]['title']}' by {books[index]['author']}\n")
+
+def search_books() -> None:
+    """Search books by title or author."""
+    if not books:
+        print("No books in library!\n")
+        return
+
+    query = input("Enter title or author to search: ").strip().lower()
+    results = [book for book in books if query in book['title'].lower() or query in book['author'].lower()]
+
+    if results:
+        print("\n=== Search Results ===")
+        for i, book in enumerate(results, 1):
+            status = "Issued" if book['issued'] else "Available"
+            print(f"{i}. {book['title']} by {book['author']} - {status}")
+        print()
+    else:
+        print("No matching books found.\n")
+
+
+=======
+def delete_book() -> None:
+    """Delete a book from the library by number."""
+    view_books()
+    if not books:
+        return
+
+    try:
+        index = int(input("Enter book number to delete: ").strip()) - 1
+        if not (0 <= index < len(books)):
+            print("Invalid book number!\n")
+            return
+    except ValueError:
+        print("Invalid input! Please enter a number.\n")
+        return
+
+    removed = books.pop(index)
+    save_books(books)
+    print(f"Deleted book '{removed['title']}' by {removed['author']}\n")
+
+
 
 def main() -> None:
     """Main menu loop for library management."""
@@ -77,7 +179,17 @@ def main() -> None:
         "2": view_books,
         "3": issue_book,
         "4": return_book,
+
         "5": lambda: print("Exiting program. Goodbye!\n")
+=======
+        "5": search_books,
+
+        "6": lambda: print("Exiting program. Goodbye!\n")
+=======
+        "6": delete_book,
+        "7": lambd: print("Exiting program. Goodbye!\n")
+
+
     }
 
     while True:
@@ -86,13 +198,31 @@ def main() -> None:
         print("2. View Books")
         print("3. Issue Book")
         print("4. Return Book")
+
         print("5. Exit")
+=======
+        print("5. Search Books")
+
+        print("6. Exit")
+=======
+        print("6. Delete Book")
+        print("7. Exit"
+
+
         choice = input("Enter your choice: ").strip()
 
         action = menu_options.get(choice)
         if action:
             action()
+
             if choice == "5":
+=======
+
+            if choice == "6":
+=======
+            if choice == "7":
+
+
                 break
         else:
             print("Invalid choice! Please try again.\n")
