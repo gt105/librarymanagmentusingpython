@@ -60,12 +60,23 @@ def issue_book() -> None:
         print("Invalid input! Please enter a number.\n")
         return
 
+
     if books[index]['issued']:
         print(f"Book '{books[index]['title']}' is already issued!\n")
     else:
         books[index]['issued'] = True
         save_books(books)
         print(f"Issued: '{books[index]['title']}' by {books[index]['author']}\n")
+
+=======
+
+    if books[index]['issued']:
+        print(f"Book '{books[index]['title']}' is already issued!\n")
+    else:
+        books[index]['issued'] = True
+        save_books(books)
+        print(f"Issued: '{books[index]['title']}' by {books[index]['author']}\n")
+
 
 def return_book() -> None:
     """Return a previously issued book."""
@@ -107,6 +118,8 @@ def search_books() -> None:
     else:
         print("No matching books found.\n")
 
+
+=======
 def delete_book() -> None:
     """Delete a book from the library by number."""
     view_books()
@@ -126,6 +139,7 @@ def delete_book() -> None:
     save_books(books)
     print(f"Deleted book '{removed['title']}' by {removed['author']}\n")
 
+
 def main() -> None:
     """Main menu loop for library management."""
     menu_options = {
@@ -134,8 +148,12 @@ def main() -> None:
         "3": issue_book,
         "4": return_book,
         "5": search_books,
+
+        "6": lambda: print("Exiting program. Goodbye!\n")
+=======
         "6": delete_book,
         "7": lambda: print("Exiting program. Goodbye!\n")
+
     }
 
     while True:
@@ -145,14 +163,22 @@ def main() -> None:
         print("3. Issue Book")
         print("4. Return Book")
         print("5. Search Books")
+
+        print("6. Exit")
+=======
         print("6. Delete Book")
-        print("7. Exit")
+        print("7. Exit"
+
         choice = input("Enter your choice: ").strip()
 
         action = menu_options.get(choice)
         if action:
             action()
+
+            if choice == "6":
+=======
             if choice == "7":
+
                 break
         else:
             print("Invalid choice! Please try again.\n")
